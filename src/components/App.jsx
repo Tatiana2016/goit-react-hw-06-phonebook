@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { v4 as uuidv4 } from 'uuid';
-
-
 import ContactForm from './ContactForm';
 import ContactList from './ContactList';
 import Filter from './Filter';
@@ -20,6 +18,7 @@ const Title = styled.h1`
   font-size: 24px;
   margin-bottom: 20px;
 `;
+
 
 const App = () => {
   const [contacts, setContacts] = useState([]);

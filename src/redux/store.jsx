@@ -1,34 +1,36 @@
-import { configureStore, createSlice, createAction } from '@reduxjs/toolkit';
+import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
-import { combineReducers } from 'redux';
+import { createAction } from '@reduxjs/toolkit';
 
-const contactsSlice = createSlice({
-  name: 'contacts',
-  initialState: [],
-  reducers: {
-    addContact: (state, action) => {
-      state.push(action.payload);
-    },
-    deleteContact: (state, action) => {
+export const addContact = createAction('contacts/addContact');
+export const deleteContact = createAction('contacts/deleteContact');
+export const setFilter = createAction('filter/setFilter');
+
+const contactsReducer = (state = [], action) => {
+  switch (action.type) {
+    case addContact.type:
+      return [...state, action.payload];
+    case deleteContact.type:
       return state.filter((contact) => contact.id !== action.payload);
-    },
-  },
-});
+    default:
+      return state;
+  }
+};
 
-const filterSlice = createSlice({
-  name: 'filter',
-  initialState: '',
-  reducers: {
-    setFilter: (state, action) => {
+const filterReducer = (state = '', action) => {
+  switch (action.type) {
+    case setFilter.type:
       return action.payload;
-    },
-  },
-});
+    default:
+      return state;
+  }
+};
+
 
 const rootReducer = combineReducers({
-  contacts: contactsSlice.reducer,
-  filter: filterSlice.reducer,
+  contacts: contactsReducer,
+  filter: filterReducer,
 });
 
 const persistConfig = {
@@ -39,11 +41,7 @@ const persistConfig = {
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
-  reducer: persistedReducer,
+  reducer: persistedReducer, 
 });
 
 export const persistor = persistStore(store);
-
-// Exporting individual actions
-export const deleteContact = createAction('contacts/deleteContact');
-export const setFilter = createAction('filter/setFilter');
