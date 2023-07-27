@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
+import { useDispatch } from 'react-redux';
+import { deleteContact } from '../redux/store';
 
 const List = styled.ul`
   list-style: none;
@@ -33,18 +35,26 @@ const ContactNumber = styled.span`
   color: #333;
 `;
 
-const ContactList = ({ contacts, onDeleteContact }) => (
-  <List>
-    {contacts.map(({ id, name, number }) => (
-      <ContactItem key={id}>
-        {name}: <ContactNumber>{number}</ContactNumber>
-        <button type="button" onClick={() => onDeleteContact(id)}>
-          Delete
-        </button>
-      </ContactItem>
-    ))}
-  </List>
-);
+const ContactList = ({ contacts }) => {
+  const dispatch = useDispatch();
+
+  const handleDeleteContact = (contactId) => {
+    dispatch(deleteContact(contactId));
+  };
+
+  return (
+    <List>
+      {contacts.map(({ id, name, number }) => (
+        <ContactItem key={id}>
+          {name}: <ContactNumber>{number}</ContactNumber>
+          <button type="button" onClick={() => handleDeleteContact(id)}>
+            Delete
+          </button>
+        </ContactItem>
+      ))}
+    </List>
+  );
+};
 
 ContactList.propTypes = {
   contacts: PropTypes.arrayOf(
@@ -54,7 +64,6 @@ ContactList.propTypes = {
       number: PropTypes.string.isRequired,
     })
   ).isRequired,
-  onDeleteContact: PropTypes.func.isRequired,
 };
 
 export default ContactList;

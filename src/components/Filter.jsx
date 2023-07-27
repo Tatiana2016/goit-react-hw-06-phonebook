@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import PropTypes from 'prop-types';
+import { useDispatch} from 'react-redux';
+import { setFilter } from '../redux/store';
 
 const Label = styled.label`
   display: block;
@@ -16,16 +17,19 @@ const Input = styled.input`
   margin-bottom: 10px;
 `;
 
-const Filter = ({ value, onChangeFilter }) => (
-  <Label>
-    Filter contacts by name:
-    <Input type="text" value={value} onChange={onChangeFilter} />
-  </Label>
-);
+const Filter = () => {
+  const dispatch = useDispatch();
 
-Filter.propTypes = {
-  value: PropTypes.string.isRequired,
-  onChangeFilter: PropTypes.func.isRequired,
+  const handleChangeFilter = (event) => {
+    dispatch(setFilter(event.target.value));
+  };
+
+  return (
+    <Label>
+      Filter contacts by name:
+      <Input type="text" onChange={handleChangeFilter} />
+    </Label>
+  );
 };
 
 export default Filter;
