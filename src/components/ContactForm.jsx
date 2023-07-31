@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useDispatch } from 'react-redux';
 import { v4 as uuidv4 } from 'uuid';
-import PropTypes from 'prop-types';
-import { createAction } from '@reduxjs/toolkit';
 
-  const Form = styled.form`
+import { addContact } from '../redux/store';
+
+const Form = styled.form`
   label {
     display: block;
     margin-bottom: 10px;
@@ -30,10 +30,7 @@ import { createAction } from '@reduxjs/toolkit';
   }
 `;
 
-// Use createAction to create a serializable action
-export const addContact = createAction('contacts/addContact');
-
-const ContactForm = ({ onAddContact }) => {
+const ContactForm = () => {
   const dispatch = useDispatch();
 
   const [name, setName] = useState('');
@@ -57,7 +54,6 @@ const ContactForm = ({ onAddContact }) => {
 
     dispatch(addContact({ id: uuidv4(), name, number }));
 
-    
     setName('');
     setNumber('');
   };
@@ -93,10 +89,6 @@ const ContactForm = ({ onAddContact }) => {
       <button type="submit">Add contact</button>
     </Form>
   );
-};
-
-ContactForm.propTypes = {
-  onAddContact: PropTypes.func.isRequired,
 };
 
 export default ContactForm;

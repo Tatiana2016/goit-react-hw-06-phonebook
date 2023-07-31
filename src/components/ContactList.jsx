@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import PropTypes from 'prop-types';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { deleteContact } from '../redux/store';
 
 const List = styled.ul`
@@ -35,8 +34,15 @@ const ContactNumber = styled.span`
   color: #333;
 `;
 
-const ContactList = ({ contacts }) => {
+const ContactList = () => {
   const dispatch = useDispatch();
+  const filteredContacts = useSelector((state) => {
+    const { contacts, filter } = state;
+    const normalizedFilter = filter.toLowerCase();
+    return contacts.filter((contact) =>
+      contact.name.toLowerCase().includes(normalizedFilter)
+    );
+  });
 
   const handleDeleteContact = (contactId) => {
     dispatch(deleteContact(contactId));
@@ -44,7 +50,7 @@ const ContactList = ({ contacts }) => {
 
   return (
     <List>
-      {contacts.map(({ id, name, number }) => (
+      {filteredContacts.map(({ id, name, number }) => (
         <ContactItem key={id}>
           {name}: <ContactNumber>{number}</ContactNumber>
           <button type="button" onClick={() => handleDeleteContact(id)}>
@@ -54,16 +60,6 @@ const ContactList = ({ contacts }) => {
       ))}
     </List>
   );
-};
-
-ContactList.propTypes = {
-  contacts: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-      number: PropTypes.string.isRequired,
-    })
-  ).isRequired,
 };
 
 export default ContactList;

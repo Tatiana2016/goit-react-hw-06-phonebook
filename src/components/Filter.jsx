@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { useDispatch} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setFilter } from '../redux/store';
 
 const Label = styled.label`
@@ -17,8 +17,11 @@ const Input = styled.input`
   margin-bottom: 10px;
 `;
 
+const selectFilterValue = (state) => state.filter; // Selector function to get only the filter value
+
 const Filter = () => {
   const dispatch = useDispatch();
+  const filterValue = useSelector(selectFilterValue);
 
   const handleChangeFilter = (event) => {
     dispatch(setFilter(event.target.value));
@@ -27,7 +30,7 @@ const Filter = () => {
   return (
     <Label>
       Filter contacts by name:
-      <Input type="text" onChange={handleChangeFilter} />
+      <Input type="text" value={filterValue} onChange={handleChangeFilter} />
     </Label>
   );
 };
